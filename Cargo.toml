@@ -1,15 +1,15 @@
 [package]
-name = "xcolor"
+name = "xblend"
 version = "0.1.0"
 authors = ["xstater email:a166224@163.com"]
-homepage = "https://crates.io/xcolor"
+homepage = "https://crates.io/xblend"
 categories = ["computer-vision","graphics","multimedia","rendering::data-formats"]
 license = "MIT"
 keywords = ["color","graphics","RGB","RGBA","blend"]
-repository = "https://github.com/xstater/xcolor"
+repository = "https://github.com/xstater/xblend"
 readme = "README.md"
 description = "A simple color library."
-documentation = "https://docs.rs/xcolor/"
+documentation = "https://docs.rs/xblend/"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -17,4 +17,4 @@ edition = "2018"
 [dependencies]
 
 [lib]
-name = "xcolor"
+name = "xblend"

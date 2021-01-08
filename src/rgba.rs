@@ -1,45 +1,56 @@
 use std::ops::{Add, Sub, Mul, Div};
-use crate::{InnerType, RGB, Clear, Src, Dst, SrcOver, DstOver, SrcIn, DstIn, SrcOut, DstOut, SrcATop, DstATop, Xor, Darken, Lighten, Multiply, Screen};
+use crate::blend::{Clear, Src, Dst, SrcOver, DstOver, SrcIn, DstIn, SrcOut, DstOut, SrcATop, DstATop, Xor, Darken, Lighten, Multiply, Screen};
+use crate::{InnerType, RGB};
 
+/// This struct represents a RGBA color
 #[derive(Debug,Default,Copy,Clone,PartialEq,Eq,Hash,PartialOrd,Ord)]
 pub struct RGBA<T : InnerType>(T,T,T,T);
 
 impl<T : InnerType > RGBA<T>{
+    /// Create a new RGBA color with 4 components.
     pub fn new(r : T,g : T,b : T,a : T) -> RGBA<T>{
         RGBA(r,g,b,a)
     }
 
+    /// Create a new RGBA color from another RGB color and the alpha component.
     pub fn from_rgb(color : &RGB<T>,a : T) -> RGBA<T>{
         RGBA(color.r(),color.g(),color.b(),a)
     }
 
+    /// Get the Red component.
     pub fn r(&self) -> T{
         self.0
     }
 
+    /// Get the Green component.
     pub fn g(&self) -> T{
         self.1
     }
 
+    /// Get the Blue component.
     pub fn b(&self) -> T{
         self.2
     }
 
+    /// Get the alpha component.
     pub fn a(&self) -> T{
         self.3
     }
 
+    /// Get the RGB components.
     pub fn rgb(&self) -> RGB<T> {
         RGB::new(self.0, self.1, self.2)
     }
 }
 
+/// A useful macro to create a Color with 4 components or an integer value.
 #[macro_export]
 macro_rules! rgba{
     ($r:expr, $g:expr, $b:expr, $a:expr) => {RGBA::new($r,$g,$b,$a)};
     ($v:expr) => {RGBA::from($v)}
 }
 
+/// A useful trait to convert the other type to RGBA
 pub trait IntoRGBA<T : InnerType>{
     fn into_rgba(self) -> RGBA<T>;
 }
@@ -51,15 +62,52 @@ impl<T : InnerType> IntoRGBA<T> for (T,T,T,T){
 }
 
 impl RGBA<f32>{
+    /// Calculate the gray value<br>
+    /// the result equals ```R*0.33+G*0.59+B*0.11```
     pub fn to_gray(&self) -> f32{
         self.0 * 0.33 + self.1 * 0.59 + self.2 * 0.11
+    }
+
+    /// Convert itself into RGBA&lt;u8&gt;
+    pub fn to_u8(&self) -> RGBA<u8>{
+        RGBA(
+            (self.0 * 255.0) as u32 as u8,
+            (self.1 * 255.0) as u32 as u8,
+            (self.2 * 255.0) as u32 as u8,
+            (self.3 * 255.0) as u32 as u8,
+        )
+    }
+
+    /// Get the unsigned integer representation of itself.
+    pub fn as_u32(&self) -> u32 {
+        self.to_u8().as_u32()
     }
 }
 
 impl RGBA<u8>{
+    /// Calculate the gray value<br>
+    /// The result equals```(R*28+G*151+B*77)>>8```
     pub fn to_gray(&self) -> u8{
         //convert to u32 to avoid overflow
         (((self.0 as u32) * 28 + (self.1 as u32) * 151 + (self.2 as u32) * 77) >> 8 ) as u8
+    }
+
+    /// Convert itself into RGBA&lt;f32&gt;
+    pub fn to_f32(&self) -> RGBA<f32>{
+        RGBA(
+            self.0 as f32 / 255.0,
+            self.1 as f32 / 255.0,
+            self.2 as f32 / 255.0,
+            self.3 as f32 / 255.0,
+        )
+    }
+
+    /// Get the unsigned integer representation of itself
+    pub fn as_u32(&self) -> u32 {
+        ((self.0 as u32) << 24)
+      | ((self.1 as u32) << 16)
+      | ((self.2 as u32) << 8 )
+      | ((self.3 as u32) << 0 )
     }
 }
 

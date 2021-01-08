@@ -1,5 +1,11 @@
 //! # XColor
 //! xcolor is a simple color library can calculate color blending.
+//! ### homepage
+//! [crates.io](https://crates.io/crates/xcolor)
+//! ### Documentation
+//! [docs.rs](https://docs.rs/xcolor/)
+//! ### Source
+//! [github](https://github.com/xstater/xcolor)
 //! ## Abstract
 //! XColor has two important structures: RGB&lt;T&gt; & RGBA&lt;T&gt; <br>
 //! where T can be f32 or u8
